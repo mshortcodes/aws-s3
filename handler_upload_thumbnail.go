@@ -71,7 +71,13 @@ func (cfg *apiConfig) handlerUploadThumbnail(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	assetPath := getAssetPath(videoID, mediaType)
+	randID, err := getRandID()
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't generate random ID", err)
+		return
+	}
+
+	assetPath := getAssetPath(randID, mediaType)
 	assetDiskPath := cfg.getAssetDiskPath(assetPath)
 
 	dst, err := os.Create(assetDiskPath)
